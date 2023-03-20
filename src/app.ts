@@ -12,6 +12,26 @@ function AutoBind(_: any, _2: string, descriptor: PropertyDescriptor) {
   return adjDescriptor;
 }
 
+interface Validatable {
+  value: string | number;
+  required?: boolean;
+  minLegnth?: number;
+  maxLenght?: number;
+  min?: number;
+  max?: number;
+}
+
+// const inputValidator: Validatable = {};
+
+function validate(validateInput: Validatable) {
+  let isValid = true;
+  console.log(validateInput);
+  return isValid
+
+}
+
+// Store the input into a class
+
 class ProjectInput {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
@@ -21,6 +41,7 @@ class ProjectInput {
   peopleInputElement: HTMLInputElement;
 
   constructor() {
+    // Render the HTML
     this.templateElement = document.getElementById(
       "project-input"
     )! as HTMLTemplateElement;
@@ -45,15 +66,19 @@ class ProjectInput {
     this.attach();
   }
 
-  // Return a tupple or void as undefined
+  // Check if the inputs are valid
+
+  // Retrieve the input, check if it's goood and Return a tupple or void as undefined
   private gatherUserInput(): [string, string, number] | void {
     const enteredTitle = this.titleInputElement.value;
     const enteredDescription = this.descriptionInputElement.value;
     const enteredPeople = this.peopleInputElement.value;
+    const titleValidatable: Validatable = {
+      value: enteredTitle,
+      required: true,
+    };
     if (
-      enteredTitle.trim().length === 0 ||
-      enteredDescription.trim().length === 0 ||
-      enteredPeople.trim().length === 0
+      validate(titleValidatable)
     ) {
       alert("Please fill out all the input");
       return;
@@ -62,10 +87,11 @@ class ProjectInput {
     }
   }
 
+  // Clear the inout fields
   private clearInput() {
-    this.titleInputElement.value = ''
-    this.descriptionInputElement.value = ''
-    this.peopleInputElement.value = ''
+    this.titleInputElement.value = "";
+    this.descriptionInputElement.value = "";
+    this.peopleInputElement.value = "";
   }
 
   @AutoBind
@@ -73,10 +99,9 @@ class ProjectInput {
     event.preventDefault();
     const validUserInput = this.gatherUserInput();
     if (Array.isArray(validUserInput)) {
-      const [title, desc, people] = validUserInput
+      const [title, desc, people] = validUserInput;
       this.clearInput();
       console.log(title, desc, people);
-
     }
   }
 
