@@ -45,12 +45,39 @@ class ProjectInput {
     this.attach();
   }
 
+  // Return a tupple or void as undefined
+  private gatherUserInput(): [string, string, number] | void {
+    const enteredTitle = this.titleInputElement.value;
+    const enteredDescription = this.descriptionInputElement.value;
+    const enteredPeople = this.peopleInputElement.value;
+    if (
+      enteredTitle.trim().length === 0 ||
+      enteredDescription.trim().length === 0 ||
+      enteredPeople.trim().length === 0
+    ) {
+      alert("Please fill out all the input");
+      return;
+    } else {
+      return [enteredTitle, enteredDescription, +enteredPeople];
+    }
+  }
+
+  private clearInput() {
+    this.titleInputElement.value = ''
+    this.descriptionInputElement.value = ''
+    this.peopleInputElement.value = ''
+  }
+
   @AutoBind
   private submitHandler(event: Event) {
     event.preventDefault();
-    console.log(this.titleInputElement.value);
-    console.log(this.descriptionInputElement.value);
-    console.log(this.peopleInputElement.value);
+    const validUserInput = this.gatherUserInput();
+    if (Array.isArray(validUserInput)) {
+      const [title, desc, people] = validUserInput
+      this.clearInput();
+      console.log(title, desc, people);
+
+    }
   }
 
   private configure() {
