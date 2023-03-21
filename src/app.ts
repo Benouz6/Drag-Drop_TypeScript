@@ -1,3 +1,40 @@
+// Project State Management
+
+class ProjectState {
+  private listeners: any[] = [];
+  private projects: any[] = [];
+  private static instance: ProjectState;
+
+  private constructor() {}
+
+  static getInstance() {
+    if (this.instance) {
+      return this.instance;
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+
+  addListener(listenerFn: Function){
+    this.listeners.push(listenerFn)
+  }
+
+  addProject(title: string, description: string, people: number) {
+    const newProject = {
+      id: Math.random().toString(),
+      title: title,
+      description: description,
+      numOfPeople: people,
+    };
+    this.projects.push(newProject);
+    for (const listenerFn of this.listeners) {
+      listenerFn(this.projects.slice())
+    }
+  }
+}
+
+const projectState = ProjectState.getInstance();
+
 // AutoBind Decorator
 
 function AutoBind(_: any, _2: string, descriptor: PropertyDescriptor) {
@@ -85,20 +122,6 @@ class ProjectList {
   }
 }
 
-// Create a class for the items in the list
-// class Project {
-//   title: string;
-//   description: string;
-//   people: number;
-//   constructor(title: string, description: string, people: number) {
-//     this.title = title as string;
-//     this.description = description as string;
-//     this.people = people as number;
-//   }
-// }
-
-// Store the input into a class
-
 class ProjectInput {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
@@ -184,8 +207,7 @@ class ProjectInput {
     if (Array.isArray(validUserInput)) {
       const [title, desc, people] = validUserInput;
       this.clearInput();
-
-      console.log(title, desc, people);
+      projectState.addProject(title, desc, people);
     }
   }
 
@@ -199,5 +221,5 @@ class ProjectInput {
 }
 
 const project = new ProjectInput();
-const actProjectList = new ProjectList('active')
-const finishedProjectList = new ProjectList('finished')
+const actProjectList = new ProjectList("active");
+const finishedProjectList = new ProjectList("finished");
