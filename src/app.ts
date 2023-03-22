@@ -15,8 +15,8 @@ class ProjectState {
     return this.instance;
   }
 
-  addListener(listenerFn: Function){
-    this.listeners.push(listenerFn)
+  addListener(listenerFn: Function) {
+    this.listeners.push(listenerFn);
   }
 
   addProject(title: string, description: string, people: number) {
@@ -28,7 +28,7 @@ class ProjectState {
     };
     this.projects.push(newProject);
     for (const listenerFn of this.listeners) {
-      listenerFn(this.projects.slice())
+      listenerFn(this.projects.slice());
     }
   }
 }
@@ -93,6 +93,7 @@ class ProjectList {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
   element: HTMLElement;
+  assignedProject: any[];
   constructor(private type: "active" | "finished") {
     this.templateElement = document.getElementById(
       "project-list"
@@ -102,15 +103,32 @@ class ProjectList {
       this.templateElement.content,
       true
     );
+    this.assignedProject = [];
     this.element = importedNode.firstElementChild as HTMLElement;
     this.element.id = `${this.type}-projects`;
+    projectState.addListener((projects: any[]) => {
+      this.assignedProject = projects;
+      this.renderProjects();
+      this.attach();
+    });
     this.attach();
     this.renderContent();
   }
 
+  private renderProjects() {
+    const listEl = document.getElementById(
+      `${this.type}-projects-list`
+    )! as HTMLUListElement;
+    for (const project of this.assignedProject) {
+      const listItem = document.createElement("li");
+      listItem.textContent = project.title;
+      listEl.appendChild(listItem);
+    }
+  }
+
   private renderContent() {
     const listId = this.element.querySelector("ul")!;
-    listId.id = `${this.type}-projects-lisy`;
+    listId.id = `${this.type}-projects-list`;
     const h2 = (this.element.querySelector(
       "h2"
     )!.innerHTML = `${this.type.toUpperCase()} PROJECTS`);
