@@ -205,26 +205,27 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   }
 }
 
-class ProjectInput {
-  templateElement: HTMLTemplateElement;
-  hostElement: HTMLDivElement;
-  element: HTMLFormElement;
+class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
+  // templateElement: HTMLTemplateElement;
+  // hostElement: HTMLDivElement;
+  // element: HTMLFormElement;
   titleInputElement: HTMLInputElement;
   descriptionInputElement: HTMLInputElement;
   peopleInputElement: HTMLInputElement;
 
   constructor() {
     // Render the HTML at the first place
-    this.templateElement = document.getElementById(
-      "project-input"
-    )! as HTMLTemplateElement;
-    this.hostElement = document.getElementById("app")! as HTMLDivElement;
+    super("project-input", "app", true);
+    // this.templateElement = document.getElementById(
+    //   "project-input"
+    // )! as HTMLTemplateElement;
+    // this.hostElement = document.getElementById("app")! as HTMLDivElement;
 
-    const importedNode = document.importNode(
-      this.templateElement.content,
-      true
-    );
-    this.element = importedNode.firstElementChild as HTMLFormElement;
+    // const importedNode = document.importNode(
+    //   this.templateElement.content,
+    //   true
+    // );
+    // this.element = importedNode.firstElementChild as HTMLFormElement;
     this.element.setAttribute("id", "user-input");
     this.titleInputElement = this.element.querySelector(
       "#title"
