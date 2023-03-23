@@ -161,7 +161,6 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
         }
         return project.status === ProjectStatus.Finished;
       });
-      console.log(relevantProject);
 
       this.assignedProject = relevantProject;
       this.renderProjects();
@@ -189,7 +188,6 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
         }
         return project.status === ProjectStatus.Finished;
       });
-      console.log(relevantProject);
 
       this.assignedProject = relevantProject;
       this.renderProjects();
@@ -215,18 +213,7 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
 
   constructor() {
     // Render the HTML at the first place
-    super("project-input", "app", true);
-    // this.templateElement = document.getElementById(
-    //   "project-input"
-    // )! as HTMLTemplateElement;
-    // this.hostElement = document.getElementById("app")! as HTMLDivElement;
-
-    // const importedNode = document.importNode(
-    //   this.templateElement.content,
-    //   true
-    // );
-    // this.element = importedNode.firstElementChild as HTMLFormElement;
-    this.element.setAttribute("id", "user-input");
+    super("project-input", "app", true, "user-input");
     this.titleInputElement = this.element.querySelector(
       "#title"
     ) as HTMLInputElement;
@@ -237,10 +224,11 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
       "#people"
     ) as HTMLInputElement;
     this.configure();
-    this.attach();
   }
-
-  // Check if the inputs are valid
+  configure() {
+    this.element.addEventListener("submit", this.submitHandler);
+  }
+  renderContent(): void {}
 
   // Retrieve the input, check if it's goood and Return a tupple or void as undefined
   private gatherUserInput(): [string, string, number] | void {
@@ -293,14 +281,6 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
       this.clearInput();
       projectState.addProject(title, desc, people);
     }
-  }
-
-  private configure() {
-    this.element.addEventListener("submit", this.submitHandler);
-  }
-
-  private attach() {
-    this.hostElement.insertAdjacentElement("afterbegin", this.element);
   }
 }
 
